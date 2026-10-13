@@ -81,25 +81,26 @@ export default () => {
     return [
         movies.map(movie => 
             <figure>
-                <figcaption>{movie.title}</figcaption>
+                <figcaption>Tytuł: {movie.title}</figcaption>
                 <img src={movie.poster}/>
-                <p>{movie.year}</p>
+                <p>Rok wydania: {movie.year}</p>
             </figure>
-        ), 
+        ),
         books.map(book => 
             <figure>
                 <figcaption>{book.title}</figcaption>
-                <figcaption>{book.pages}</figcaption>
+                <figcaption>Ilość stron: {book.pages}</figcaption>
                 <img src={book.cover}/>
-                <p>{book.year}</p>
+                <p>Rok wydania: {book.year}</p>
             </figure>
         ),
         albums.map(album => 
             <figure>
-                <figcaption>{album.title}</figcaption>
-                <figcaption>{album.band}</figcaption>
+                <figcaption>Tytuł: {album.title}</figcaption>
+                <figcaption>Zespół: {album.band}</figcaption>
+                <figcaption>Gatunek: {album.genre}</figcaption>
                 <img src={album.cover}/>
-                <p>{album.year}</p>
+                <p>Rok wydania: {album.year}</p>
             </figure>
         )
     ]
