@@ -1,22 +1,30 @@
 declare global {
     interface movie {
-        poster : string,
         title : string,
-        year : number
+        poster : string,
+        year : number,
+        rating : number
     }
 
     interface book {
-        cover : string,
         title : string,
+        cover : string,
         year : number,
         pages : number
     }
 
     interface album {
-        cover : string,
         title : string,
+        cover : string,
         band : string,
         genre : string,
         year : number
     }
+
+    interface universal extends movie, book, album {}
+
+    type condition = (condition : universal)=>boolean
+    type sortingCondition = (first : universal, second : universal)=>boolean
+
+    interface labellingCondition extends condition {label : string}
 }
