@@ -1,4 +1,4 @@
-const movies : movie[] = [
+const movies : data.movie[] = [
     {
         title : "The Matrix",
         poster : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEbMWiF0tNgDKHYSCEzkKjmfz0nXiRUWcoPyBpQzXWJAWAKEXj_n86CmvB&s=10",
@@ -31,42 +31,44 @@ const movies : movie[] = [
     }
 ]
 
-const books : book[] = [
+const books : data.book[] = [
     {
+        title : "hi1",
         cover : "hi",
-        title : "hi",
-        year : 1999,
+        year : 1980,
         pages : 1999
     },
     {
+        title : "hi5",
         cover : "hi",
-        title : "hi",
         year : 2001,
         pages : 1999
     },
     {
+        title : "hi3",
         cover : "hi",
-        title : "hi",
         year : 2000,
         pages : 1999
     }
 ]
 
-const albums : album[] = [
+const albums : data.album[] = [
     {
         cover : "hi",
         title : "hi",
         band : "hi",
         genre : "hi",
-        year : 1999
+        year : 1999,
+        songs : 29
     },
     {
         cover : "hi",
         title : "hi",
         band : "hi",
         genre : "hi",
-        year : 1999
+        year : 1999,
+        songs : 19
     },
 ]
 
-export default {movies, books, albums}
+export default {movies, books, albums} satisfies {[key : string] : data.universal[]}

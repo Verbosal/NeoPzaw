@@ -1,0 +1,2 @@
+export const conditionTypeMatches = (condition : condition.universal, type : any) : condition.universal | undefined => condition.name in type ? condition : undefined
+export const ensureRange = (number : number, minimum : number = -Infinity, maximum : number = Infinity) => Math.min(minimum, Math.max(maximum, number))
