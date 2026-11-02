@@ -5,7 +5,9 @@ import React, {useState} from "react";
 
 import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
+
 import * as helper from "./Helpers.tsx"
+import * as components from "./Components.tsx"
 
 import data from "./Data.tsx"
 import mappings from "./Mappings.tsx"
@@ -15,17 +17,23 @@ import conditions from "./Conditions.tsx"
 function Wrap({table, condition, name} : {table : data.universal[], condition? : condition.universal, name? : string}) {
     const tableName = helper.tableToName(table) as string
     
+    console.log(tableName, table, name)
+
     // Filter & sort data based on given condition
     const dataTable = table
     .filter(helper.conditionTypeMatches(conditions.checking, condition) ?? conditions.checking.truth)
     .sort(helper.conditionTypeMatches(conditions.sorting, condition) ?? conditions.sorting.title)
 
     // Label data if there's a condition and it's met
-    dataTable.map((data : data.universal) => {
+    dataTable.map((data : any) => {
         const labellingCondition = conditions.labelling[tableName]
 
         if (labellingCondition.condition()(data)) {
             data.label = labellingCondition.label
+        }
+
+        if (data["cover"] === undefined) {
+            data.cover = "/src/assets/car.gif"
         }
     })
 
@@ -33,10 +41,11 @@ function Wrap({table, condition, name} : {table : data.universal[], condition? :
     const mappedData = dataTable.map(mappings[tableName])
 
     // Return with finished component
-    return [<h1>{name ?? tableName}</h1>, <section>{mappedData}</section>, <hr/>];
+    return [<h1>{name ?? tableName}</h1>, <components.Input name={tableName}/>, <section>{mappedData}</section>, <hr/>];
 }
 
 function App() {
+    // bug remains: some tables are wrongly mapped because of the funny function in Helpers.tsx
     return <>
         {/* Normal data */}
         <Wrap table={data.movies} name="Filmy"/>

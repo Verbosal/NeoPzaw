@@ -34,25 +34,21 @@ const movies : data.movie[] = [
 const books : data.book[] = [
     {
         title : "1984",
-        cover : "image.png",
         year : 1980,
         pages : 1999
     },
     {
         title : "1984 2",
-        cover : "image.png",
         year : 2001,
         pages : 1999
     },
     {
         title : "Abc",
-        cover : "image.png",
         year : 2000,
         pages : 1999
     },
     {
         title : "Efg",
-        cover : "image.png",
         year : 2000,
         pages : 1999
     }
@@ -60,34 +56,30 @@ const books : data.book[] = [
 
 const albums : data.album[] = [
     {
-        cover : "image.png",
         title : "Death metal",
-        band : "hi",
-        genre : "hi",
+        band : "zesþół",
+        genre : "funky",
         year : 1999,
         songs : 29
     },
     {
-        cover : "image.png",
         title : "Hard metal",
-        band : "hi",
-        genre : "hi",
+        band : "zespół",
+        genre : "kpop",
         year : 1999,
         songs : 300
     },
     {
-        cover : "image.png",
         title : "Soft metal",
-        band : "hi",
-        genre : "hi",
+        band : "zespół",
+        genre : "pop",
         year : 1999,
         songs : 19
     },
     {
-        cover : "image.png",
         title : "Mineral ore",
-        band : "hi",
-        genre : "hi",
+        band : "zespół",
+        genre : "poop",
         year : 1999,
         songs : 0
     }

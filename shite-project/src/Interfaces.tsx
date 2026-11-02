@@ -1,6 +1,6 @@
 declare global {
     type title = {title : string}
-    type cover = {cover : string}
+    type cover = {cover? : string}
     type year  = {year : number}
     type label = {label? : string}
 

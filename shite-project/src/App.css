@@ -1,14 +1,14 @@
 html {
   font-family: "Comic Sans MS", "Comic Sans", cursive;
+  /* szkoda że nie działa lmao */
 }
 
 img {
-  max-width: 100px;
+  width: 100%;
 }
 
 figure {
   figcaption {
-    font-size: large;
     font-weight: bold;
   }
 
@@ -20,11 +20,21 @@ figure {
   p {
     font-size: small;
   }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
+
+    button {
+      width: 100%;
+      font-size: small;
+    }
+  }
 }
 
 section {
-  width: 100%;
-
   display: flex;
   justify-content: center;
 }
