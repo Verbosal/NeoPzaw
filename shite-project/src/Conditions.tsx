@@ -37,7 +37,7 @@ const conditions : {[category : string] : {[name : string] : any}} = {
         },
         albums : {
             condition : () => conditions.checking.albums.noSongs,
-            label : "Brak utworów"
+            label : (<p class="alert alert-info">Brak utworów</p>)
         }
     }
 }

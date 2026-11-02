@@ -4,7 +4,7 @@ import * as components from "./Components.tsx"
 // Typescript jest szalony
 let mappings : {[name : string] : (item : any) => React.JSX.Element} = {
     movies : (movie : data.movie) => 
-        <figure class="card" onClick={()=>{console.log("Wybrano film: " + movie.title)}}>
+        <figure class="card col" onClick={()=>{console.log("Wybrano film: " + movie.title)}}>
             <figcaption class="card-title">{movie.title}</figcaption>
             <div class="card-body">
                 <img src={movie.poster}/>
@@ -15,7 +15,7 @@ let mappings : {[name : string] : (item : any) => React.JSX.Element} = {
         </figure>
     ,
     books : (book : data.book) => 
-        <figure class="card">
+        <figure class="card col">
             <figcaption class="card-title">{book.title}</figcaption>
             <div class="card-body">
                 <p>Ilość stron: {book.pages}</p>
@@ -26,7 +26,7 @@ let mappings : {[name : string] : (item : any) => React.JSX.Element} = {
         </figure>
     ,
     albums : (album : data.album) => 
-        <figure class="card">
+        <figure class="card col">
             <figcaption class="card-title">{album.title}</figcaption>
             <div class="card-body">
                 <p>Zespół: {album.band}</p>

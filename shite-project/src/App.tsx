@@ -33,7 +33,7 @@ function Wrap({table, condition, name} : {table : data.universal[], condition? :
         }
 
         if (data["cover"] === undefined) {
-            data.cover = "/src/assets/car.gif"
+            data.cover = "/src/assets/car.gif"  
         }
     })
 
@@ -41,12 +41,12 @@ function Wrap({table, condition, name} : {table : data.universal[], condition? :
     const mappedData = dataTable.map(mappings[tableName])
 
     // Return with finished component
-    return [<h1>{name ?? tableName}</h1>, <components.Input name={tableName}/>, <section>{mappedData}</section>, <hr/>];
+    return [<h1>{name ?? tableName}</h1>, <components.Input name={tableName}/>, <section class="row">{mappedData}</section>, <hr/>];
 }
 
 function App() {
     // bug remains: some tables are wrongly mapped because of the funny function in Helpers.tsx
-    return <>
+    return <main class="container">
         {/* Normal data */}
         <Wrap table={data.movies} name="Filmy"/>
         <Wrap table={data.books}  name="Książki"/>
@@ -58,7 +58,7 @@ function App() {
 
         {/* Sorted data */}
         <Wrap table={data.books}  condition={conditions.sorting.year} name="Posortowane po roku wydania"/>
-    </>
+    </main>
 }
 
 // Dude, vscode makes it so unclear how to disable ai
