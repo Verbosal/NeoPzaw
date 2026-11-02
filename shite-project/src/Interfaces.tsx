@@ -1,25 +1,24 @@
 declare global {
+    type title = {title : string}
+    type cover = {cover : string}
+    type year  = {year : number}
+    type label = {label? : string}
+
+    interface common extends title, year, label {}
+
     namespace data {
-        interface movie {
-            title : string,
+        interface movie extends common {
             poster : string,
-            year : number,
             rating : number
         }
 
-        interface book {
-            title : string,
-            cover : string,
-            year : number,
+        interface book extends common, cover {
             pages : number
         }
 
-        interface album {
-            title : string,
-            cover : string,
+        interface album extends common, cover {
             band : string,
             genre : string,
-            year : number,
             songs : number
         }
 
@@ -30,7 +29,10 @@ declare global {
         type checking = (condition : data.universal) => boolean
         type sorting = (first : data.universal, second : data.universal) => number
 
-        interface labelling extends checking {label? : string}
+        type labelling = {
+            condition : condition.universal,
+            label : label
+        }
 
         type universal = checking | sorting | labelling
     }

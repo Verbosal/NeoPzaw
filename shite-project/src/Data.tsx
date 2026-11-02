@@ -33,20 +33,26 @@ const movies : data.movie[] = [
 
 const books : data.book[] = [
     {
-        title : "hi1",
-        cover : "hi",
+        title : "1984",
+        cover : "image.png",
         year : 1980,
         pages : 1999
     },
     {
-        title : "hi5",
-        cover : "hi",
+        title : "1984 2",
+        cover : "image.png",
         year : 2001,
         pages : 1999
     },
     {
-        title : "hi3",
-        cover : "hi",
+        title : "Abc",
+        cover : "image.png",
+        year : 2000,
+        pages : 1999
+    },
+    {
+        title : "Efg",
+        cover : "image.png",
         year : 2000,
         pages : 1999
     }
@@ -54,21 +60,39 @@ const books : data.book[] = [
 
 const albums : data.album[] = [
     {
-        cover : "hi",
-        title : "hi",
+        cover : "image.png",
+        title : "Death metal",
         band : "hi",
         genre : "hi",
         year : 1999,
         songs : 29
     },
     {
-        cover : "hi",
-        title : "hi",
+        cover : "image.png",
+        title : "Hard metal",
+        band : "hi",
+        genre : "hi",
+        year : 1999,
+        songs : 300
+    },
+    {
+        cover : "image.png",
+        title : "Soft metal",
         band : "hi",
         genre : "hi",
         year : 1999,
         songs : 19
     },
+    {
+        cover : "image.png",
+        title : "Mineral ore",
+        band : "hi",
+        genre : "hi",
+        year : 1999,
+        songs : 0
+    }
 ]
 
-export default {movies, books, albums} satisfies {[key : string] : data.universal[]}
+const indexed : {[name : string] : data.universal[]} = {movies, books, albums}
+
+export default indexed
