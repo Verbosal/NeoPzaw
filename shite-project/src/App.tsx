@@ -1,7 +1,6 @@
 // Apparently swearing in your code improves it so uhh :>
 
 import React, {useState} from "react";
-//const [isOpen, setIsOpen] = useState(true);
 
 import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -13,22 +12,13 @@ import data from "./Data.tsx"
 import mappings from "./Mappings.tsx"
 import conditions from "./Conditions.tsx"
 
-// It's in the name, duh. it's a damn wrapper function
-function Wrap({table, condition, name} : {table : data.universal[], condition? : condition.universal, name? : string}) {
-    const tableName = helper.tableToName(table) as string
-    
-    console.log(tableName, table, name)
+// Label data if there's a condition and it's met
+function label(table : data.universal[], name : string) {
+    const labellingCondition = conditions.labelling[name]
+    const conditionFunction = labellingCondition.condition()
 
-    // Filter & sort data based on given condition
-    const dataTable = table
-    .filter(helper.conditionTypeMatches(conditions.checking, condition) ?? conditions.checking.truth)
-    .sort(helper.conditionTypeMatches(conditions.sorting, condition) ?? conditions.sorting.title)
-
-    // Label data if there's a condition and it's met
-    dataTable.map((data : any) => {
-        const labellingCondition = conditions.labelling[tableName]
-
-        if (labellingCondition.condition()(data)) {
+    table.map((data : any) => {
+        if (conditionFunction(data)) {
             data.label = labellingCondition.label
         }
 
@@ -36,6 +26,22 @@ function Wrap({table, condition, name} : {table : data.universal[], condition? :
             data.cover = "/src/assets/car.gif"  
         }
     })
+}
+
+// It's in the name, duh. it's a damn wrapper function
+function Wrap({table, condition, name} : {table : data.universal[], condition? : condition.universal, name? : string}) {
+    const tableName = helper.tableToName(table) as string
+    const [isOpen, setIsOpen] = useState(true);
+    
+    console.log(tableName, table, name)
+
+    // Filter & sort data based on given condition
+    let dataTable = table
+    .filter(helper.conditionTypeMatches(conditions.checking, condition) ?? conditions.checking.truth)
+    .sort(helper.conditionTypeMatches(conditions.sorting, condition) ?? conditions.sorting.title)
+
+    // Label data if there's a condition and it's met
+    label(dataTable, tableName)
 
     // Map data to mappings
     const mappedData = dataTable.map(mappings[tableName])
