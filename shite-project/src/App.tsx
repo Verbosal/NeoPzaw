@@ -1,72 +1,50 @@
-// Apparently swearing in your code improves it so uhh :>
+import {createElement, useState} from "react"
 
-import React, {useState} from "react";
-
-import "./App.css"
-import "bootstrap/dist/css/bootstrap.min.css"
-
-import * as helper from "./Helpers.tsx"
-import * as components from "./Components.tsx"
-
-import data from "./Data.tsx"
-import mappings from "./Mappings.tsx"
-import conditions from "./Conditions.tsx"
-
-// Label data if there's a condition and it's met
-function label(table : data.universal[], name : string) {
-    const labellingCondition = conditions.labelling[name]
-    const conditionFunction = labellingCondition.condition()
-
-    table.map((data : any) => {
-        if (conditionFunction(data)) {
-            data.label = labellingCondition.label
-        }
-
-        if (data["cover"] === undefined) {
-            data.cover = "/src/assets/car.gif"  
-        }
-    })
+interface task {
+    name : string,
+    state : "wykonane" | "niewykonane"
 }
 
-// It's in the name, duh. it's a damn wrapper function
-function Wrap({table, condition, name} : {table : data.universal[], condition? : condition.universal, name? : string}) {
-    const tableName = helper.tableToName(table) as string
-    const [isOpen, setIsOpen] = useState(true);
-    
-    console.log(tableName, table, name)
-
-    // Filter & sort data based on given condition
-    let dataTable = table
-    .filter(helper.conditionTypeMatches(conditions.checking, condition) ?? conditions.checking.truth)
-    .sort(helper.conditionTypeMatches(conditions.sorting, condition) ?? conditions.sorting.title)
-
-    // Label data if there's a condition and it's met
-    label(dataTable, tableName)
-
-    // Map data to mappings
-    const mappedData = dataTable.map(mappings[tableName])
-
-    // Return with finished component
-    return [<h1>{name ?? tableName}</h1>, <components.Input name={tableName}/>, <section class="row">{mappedData}</section>, <hr/>];
+function Task(task : task, state, setState) {
+    return <>
+        <input type="checkbox" onChange={(checkbox)=>setState}/><p key={task.name}>{task.name}</p>
+    </>
 }
 
-function App() {
-    // bug remains: some tables are wrongly mapped because of the funny function in Helpers.tsx
-    return <main class="container">
-        {/* Normal data */}
-        <Wrap table={data.movies} name="Filmy"/>
-        <Wrap table={data.books}  name="Książki"/>
-        <Wrap table={data.albums} name="Albumy"/>
-        
-        {/* Filtered data */}
-        <Wrap table={data.movies} condition={conditions.checking.after2010} name="Filmy wydane po 2010"/>
-        <Wrap table={data.albums} condition={conditions.checking.albums.mostSongs} name="Album z największą ilością piosenek"/>
+function Tasks() {
+    const [tasks, setTasks] = useState([] as task[])
+    const [state, setState] = useState("niewykonane")
 
-        {/* Sorted data */}
-        <Wrap table={data.books}  condition={conditions.sorting.year} name="Posortowane po roku wydania"/>
-    </main>
+    let setName = ""
+
+    return <>
+        <figure>Liczba niewykonanych: <figcaption>{tasks.filter((task : task)=>task.state == "niewykonane").length}</figcaption></figure>
+
+        <main>
+            <figure>
+                <figcaption>Filtruj</figcaption>
+
+                <input type="checkbox" defaultChecked/><label>Wykonane</label>
+                <input type="checkbox" defaultChecked/><label>Niewyknonane</label>
+            </figure>
+
+            <figure>
+                <figcaption>Sortuj</figcaption>
+
+                <input type="radio" name="sort" value="alphabetically" defaultChecked/><label>alfabetycznie</label>
+                <input type="radio" name="sort" value="state"/><label>wg. stanu</label>
+                <input type="radio" name="sort" value="originally"/><label>oryginalny porządek</label>
+            </figure>
+        </main>
+
+        <input onChange={(input)=>setName = input.target.value} placeholder="task's name"></input>
+        <button onClick={()=>{
+            setTasks([...tasks, {name : setName, state : "niewykonane"}])
+        }}>Add task</button>
+        <ul>
+            {tasks.map((task)=>Task(task, state, setState))}
+        </ul>
+    </>
 }
 
-// Dude, vscode makes it so unclear how to disable ai
-
-export default App
+export default () => <Tasks/>
