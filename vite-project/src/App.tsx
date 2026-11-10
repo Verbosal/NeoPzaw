@@ -13,7 +13,7 @@ interface stateFilter {
 
 const sortFilters = {alphabetically : "alphabetically", state : "state", original : "original"}
 
-function Task(task : task, tasks : task[], setTasks : any) {
+function Task({task, tasks, setTasks} : {task : task, tasks : task[], setTasks : any}) {
     return <div key={task.id}>
         <input type="checkbox" onClick={(checkbox)=>{
                 let newTasks = tasks.slice()
@@ -44,7 +44,7 @@ function Tasks({tasks, setTasks, stateFilter, sortFilter, nameFilter} : any) {
         return (<p>Brak wyników</p>)
     }
 
-    return filteredTasks.map((task : task)=>Task(task, tasks, setTasks))
+    return filteredTasks.map((task : task)=><Task task={task} tasks={tasks} setTasks={setTasks}/>)
 }
 
 export default () => {
