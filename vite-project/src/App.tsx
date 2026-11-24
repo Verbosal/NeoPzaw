@@ -1,104 +1,160 @@
-import {useState} from "react"
+import React, {useState} from "react"
+import "bootstrap"
 
-interface task {
-    id : number,
+interface character {
     name : string,
-    state : boolean
+    race : string,
+    class : string,
+    level : number,
+    description : string,
+    public : boolean
 }
 
-interface stateFilter {
-    finished : boolean,
-    unfinished : boolean
+const races = ["Człowiek", "Elf", "Krasnolud", "Ork"]
+type race = typeof races // ponieważ nie da się to zrobić w jednej linii afaik
+
+const characterClasses = ["Wojownik", "Mag", "Łucznik"]
+type characterClass = typeof characterClasses // CZEMU NIE DA SIĘ W JEDNEJ LINII
+
+function Characters({characters} : {characters : character[]}) {
+    // Jeśli niepubliczne postacie miały by być schowane:
+    // characters.filter((character : character) => character.public)
+
+   return <>
+        {characters.map((character : character) => <figure key={character.name}>
+            <figcaption>{character.name}</figcaption>
+
+            <h2>Opis</h2>
+            <p>{character.description}</p>
+
+            <h2>Rasa</h2>
+            <p>{character.race}</p>
+
+            <h2>Klasa</h2>
+            <p>{character.class}</p>
+
+            <h2>Poziom</h2>
+            <p>{character.level}</p>
+
+            <h2>Publiczna</h2>
+            <p>{character.public ? "Tak" : "Nie"}</p>
+        </figure>)}
+   </>
 }
 
-const sortFilters = {alphabetically : "alphabetically", state : "state", original : "original"}
+function CharacterForm({characters, setCharacters} : {characters : character[], setCharacters : any}) {
+    const [form, setForm] = useState<character>({
+        name : "",
+        race : races[0],
+        class : characterClasses[0],
+        level : 1,
+        description : "",
+        public : true
+    })
 
-function Task({task, tasks, setTasks} : {task : task, tasks : task[], setTasks : any}) {
-    return <div key={task.id}>
-        <input type="checkbox" onClick={(checkbox)=>{
-                let newTasks = tasks.slice()
+    const [error, setError] = useState(null as string | null)
 
-                newTasks[task.id].state = (checkbox.target as HTMLInputElement).checked
+    function validateForm(event : React.SyntheticEvent<HTMLFormElement>) {
+        function performChecks() {
+            if (characters.find((character : character) => form.name == character.name)) {
+                return "A character with that name already exists!"
+            }
 
-                setTasks(newTasks)
-            }}/><label>{task.name}</label>
-            <button onClick={()=>{
-                setTasks(tasks.filter((comparisonTask : task) => comparisonTask.id! = task.id))
-            }}>Usuń</button>
-    </div>
-}
+            if (form.name.length == 0) {
+                return "No character name given!"
+            }
 
-function Tasks({tasks, filterStates} : {tasks : any, filterStates : any}) {
-    let filteredTasks = tasks.tasks.filter((task : task)=>(task.state && filterStates.state.finished) || (!task.state && filterStates.state.unfinished))
-    .filter((task : task)=>task.name.match(filterStates.name))
-    .sort((first : task, second : task)=>{
-        switch (filterStates.sort) {
-            case sortFilters.alphabetically:
-                return first.name > second.name ? 1 : -1
-            case sortFilters.state:
-                return (first.state == second.state ? 0 : (second.state ? 1 : -1))
-            case sortFilters.original:
-                return first.id > second.id ? 1 : -1
-            default:
-                return 0
-    }})
+            if (form.name.length < 3) {
+                return "Character name is too short!"
+            }
 
-    if (filteredTasks.length == 0) {
-        return (<p>Brak wyników</p>)
+            if (form.name.length > 20) {
+                return "Character name is too long!"
+            }
+
+            if (form.description.length > 200) {
+                return "Character description is too long!"
+            }
+
+            return null
+        }
+
+        const error = performChecks()
+        setError(error)
+
+        return error
     }
 
-    return <ul>
-        {filteredTasks.map((task : task) => <Task task={task} tasks={tasks.tasks} setTasks={tasks.setTasks}/>)}
-    </ul>
+    function createCharacter(event : React.SyntheticEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        let error = validateForm(event)
+
+        if (!error) {
+            setCharacters([...characters, form])
+        }
+    }
+
+    function updateForm(event : React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+        const element = event.currentTarget
+
+        setForm(previousForm => {
+            return {
+                ...previousForm,
+                [element.name]: element.value
+            }
+        })
+    }
+
+    return <form onChange={validateForm} onSubmit={createCharacter}>
+        <input type="text" name="name" placeholder="Imię postaci" minLength={3} maxLength={20} value={form.name} onChange={updateForm}/>
+        
+        <br/>
+
+        <label htmlFor="race">Rasa</label>
+        <select name="race" defaultValue={form.race} onChange={updateForm}>
+            {races.map(race => <option key={race}>{race}</option>)}  
+        </select>
+
+        <br/>
+
+        <label htmlFor="class">Klasa</label>
+        <select name="class" defaultValue={form.class} onChange={updateForm}>
+            {characterClasses.map(characterClass => <option key={characterClass}>{characterClass}</option>)}  
+        </select>
+
+        <br/>
+
+        <label htmlFor="level">Poziom</label>
+        <input type="range" name="level" min={1} max={100} value={form.level} onChange={updateForm}/>
+
+        <br/>
+
+        <label htmlFor="description">Opis</label>
+        <textarea value={form.description} name="description" maxLength={200} onChange={updateForm}/>
+
+        <br/>
+
+        <label htmlFor="public">Postać publiczna</label>
+        <input type="checkbox" defaultChecked={form.public} name="public" onChange={updateForm}/>
+
+        <br/>
+
+        <button type="submit">Utwórz postać</button>
+
+        <br/>
+        
+        {error && <p>{error}</p>}
+    </form>
 }
 
-const Options = ({tasks, filterStates, setFilterStates} : {tasks : any, filterStates : any, setFilterStates :any}) => (
-    <main>
-        <input placeholder="wyszukiwanie po nazwie" onChange={(input)=>setFilterStates.name(input.target.value)}/><br/><br/>
-        <button onClick={()=>{
-            tasks.setTasks(tasks.filter((task : task) => !task.state))
-        }}>Usuń wykonane</button>
-        <figure>
-            <figcaption>Filtruj</figcaption>
-
-            <input type="checkbox" defaultChecked onClick={(checkbox)=>setFilterStates.state({finished : (checkbox.target as HTMLInputElement).checked, unfinished : stateFilter.unfinished})}/><label>Wykonane</label>
-            <input type="checkbox" defaultChecked onClick={(checkbox)=>setFilterStates.state({finished : filterStates.state.unfinished, unfinished : (checkbox.target as HTMLInputElement).checked})}/><label>Niewykonane</label>
-        </figure>
-
-        <figure>
-            <figcaption>Sortuj</figcaption>
-
-            <input type="radio" name="sort" value="alphabetically" defaultChecked onClick={()=>setFilterStates.sort(sortFilters.alphabetically)}/><label>alfabetycznie</label>
-            <input type="radio" name="sort" value="state" onClick={()=>setFilterStates.sort(sortFilters.state)}/><label>wg. stanu</label>
-            <input type="radio" name="sort" value="originally" onClick={()=>setFilterStates.sort(sortFilters.original)}/><label>oryginalny porządek</label>
-        </figure>
-    </main>
-)
-
 const App = () => {
-    const [tasks, setTasks] = useState([] as task[])
-    const [currentTaskName, setCurrentTaskName] = useState("")
-
-    const [stateFilter, setStateFilter] = useState({finished : true, unfinished : true} as stateFilter)
-    const [sortFilter, setSortFilter] = useState(sortFilters.alphabetically)
-    const [nameFilter, setNameFilter] = useState("")
-
-    const filterStates = ({state : stateFilter, name : nameFilter, sort : sortFilter})
-    const setFilterStates = ({state : setStateFilter, name : setNameFilter, sort : setSortFilter})
-    const tasksStates = ({tasks : tasks, setTasks : setTasks})
+    const [characters, setCharacters] = useState([] as character[])
 
     return <>
-        <figure>Liczba niewykonanych: <figcaption>{tasks.filter((task : task) => !task.state).length}</figcaption></figure>
-
-        <Options tasks={tasksStates} filterStates={filterStates} setFilterStates={setFilterStates}/>
-
-        <input onChange={(input)=>setCurrentTaskName(input.target.value)} placeholder="task's name"></input>
-        
-        {currentTaskName.trim().length != 0 && <button onClick={()=>{
-                setTasks(tasks => [{id : tasks.length, name : currentTaskName, state : false}, ...tasks])
-        }}>Dodaj zadanie</button>}
-
-        <Tasks tasks={tasksStates} filterStates={filterStates}/>
+        <CharacterForm characters={characters} setCharacters={setCharacters}/>
+        <br/>
+        <Characters characters={characters}/>
     </>
 }
 
