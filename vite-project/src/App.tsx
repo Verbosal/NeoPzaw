@@ -54,7 +54,7 @@ function CharacterForm({characters, setCharacters} : {characters : character[], 
 
     const [error, setError] = useState(null as string | null)
 
-    function validateForm(event : React.SyntheticEvent<HTMLFormElement>) {
+    function validateForm() {
         function performChecks() {
             if (characters.find((character : character) => form.name == character.name)) {
                 return "A character with that name already exists!"
@@ -88,7 +88,7 @@ function CharacterForm({characters, setCharacters} : {characters : character[], 
     function createCharacter(event : React.SyntheticEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        let error = validateForm(event)
+        let error = validateForm()
 
         if (!error) {
             setCharacters([...characters, form])
@@ -104,9 +104,11 @@ function CharacterForm({characters, setCharacters} : {characters : character[], 
                 [element.name]: element.value
             }
         })
+
+        validateForm()
     }
 
-    return <form onChange={validateForm} onSubmit={createCharacter}>
+    return <form onSubmit={createCharacter}>
         <input type="text" name="name" placeholder="Imię postaci" minLength={3} maxLength={20} value={form.name} onChange={updateForm}/>
         
         <br/>
